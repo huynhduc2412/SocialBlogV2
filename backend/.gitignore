@@ -1,0 +1,38 @@
+# Node.js dependencies
+/node_modules/
+
+# Nền tảng bảo mật
+.env
+
+# Thư mục log của hệ thống
+logs
+*.log
+*.log.*
+
+# Tệp cài đặt của IDE (VSCode, WebStorm, ...etc)
+.vscode/
+.idea/
+
+# Tệp backup, tạm thời
+*.bak
+*.tmp
+
+# Thư mục hoặc tệp của OS
+.DS_Store
+Thumbs.db
+
+# Thư mục test hoặc các tệp test
+test
+coverage
+
+# Các tệp build, dist, output
+/dist/
+/build/
+/out/
+
+# Tệp cài đặt của Docker (nếu có)
+.docker/
+docker-compose.yml
+
+# Các tệp cấu hình của GitHub Actions (nếu có)
+.github/
