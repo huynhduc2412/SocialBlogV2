@@ -31,6 +31,7 @@ app.use('/register', require('./routes/register'));
 app.use('/verify', require('./routes/verify'));
 app.use('/api/users' , require('./routes/user'))
 app.use('/cloudinary', require('./routes/upload'))
+app.use('/api/posts',  require('./routes/post'));
 
 
 // catch 404 and forward to error handler
