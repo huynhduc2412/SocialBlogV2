@@ -5,7 +5,7 @@ const  verifyToken  = require('../middleware/verifyToken'); // Middleware để 
 //api/likes
 
 // Like a post
-router.post('/post/:id', verifyToken, likePost);
+router.post('/post/:id', verifyToken, likePost); //solved
 
 // Unlike a post
 router.delete('/post/:id', unlikePost);
