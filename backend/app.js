@@ -35,6 +35,7 @@ app.use('/cloudinary', require('./routes/upload'))
 app.use('/api/posts',  require('./routes/post'));
 app.use('/api/notifications' , require('./routes/notification'))
 app.use('/api/likes', require('./routes/like'))
+app.use('/api/follows', require('./routes/follow'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
