@@ -12,7 +12,7 @@ const likePost = async (postId, userId) => {
     });
   
     if (existingLike) {
-      return false; // Nếu like đã tồn tại, trả về false
+      return ; // Nếu like đã tồn tại, trả về false
     }
   
     // Tạo mới like
@@ -57,42 +57,51 @@ const unlikePost = async (postId, userId) => {
 };
 
 const likeComment = async (commentId, userId) => {
-  const existingLike = await Like.findOne({ userId, contentId: commentId, type: 'COMMENT' });
+    // Kiểm tra xem người dùng đã like comment này chưa
+    const existingLike = await Like.findOne({ userId, contentId: commentId, type: 'COMMENT' });
+  
+    if (!existingLike) {
+        // Tạo mới like và lưu vào DB
+        const like = new Like({
+            userId,
+            contentId: commentId,
+            type: 'COMMENT'
+        });
+        await like.save();
+        const updatedPost = await Post.findByIdAndUpdate(
+            commentId,
+            {
+            $push: { comments: like }, // Thêm like vào mảng likes
+            },
+            { new: true, runValidators: true } // Trả về bài viết đã cập nhật và kiểm tra validation
+        );
+        
+        if (!updatedPost) {
+            throw new Error('Post not found');
+        }
+      
+    }
+  };
+  
 
-  if (!existingLike) {
-    const like = new Like({
-      userId,
-      contentId: commentId,
-      type: 'COMMENT'
-    });
-    await like.save();
-
-    const comment = await Comment.findById(commentId);
-    comment.likes.push(like);
-    await comment.save();
-
-    // Optional: Update Post's comments if necessary
-    const post = await Post.findById(comment.postId);
-    const comments = post.comments.map(c => c._id.toString() === comment._id.toString() ? comment : c);
-    post.comments = comments;
-    await post.save();
-  }
-};
-
-const unlikeComment = async (commentId, userId) => {
-  const like = await Like.findOneAndDelete({ userId, contentId: commentId, type: 'COMMENT' });
-
-  if (like) {
-    const comment = await Comment.findById(commentId);
-    comment.likes.pull(like._id);
-    await comment.save();
-
-    // Optional: Update Post's comments if necessary
-    const post = await Post.findById(comment.postId);
-    const comments = post.comments.map(c => c._id.toString() === comment._id.toString() ? comment : c);
-    post.comments = comments;
-    await post.save();
-  }
-};
+  const unlikeComment = async (commentId, userId) => {
+    const like = await Like.findOneAndDelete({ userId, contentId: commentId, type: 'COMMENT' });
+    //   console.log(like);
+    
+    if (like) {
+        const updatedPost = await Post.findByIdAndUpdate(
+            commentId,
+            {
+            $pull: { comments: like._id }, 
+            },
+            { new: true, runValidators: true } // Trả về bài viết đã cập nhật và kiểm tra validation
+        );
+        
+        if (!updatedPost) {
+            throw new Error('Post not found');
+        }
+        }
+  };
+  
 
 module.exports = { likePost, unlikePost, likeComment, unlikeComment };
