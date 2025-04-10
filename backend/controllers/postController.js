@@ -35,7 +35,7 @@ const getMyPosts = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   try {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     
     const posts = await postService.getPostsByUser(req.params.id);
     res.json(posts);

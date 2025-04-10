@@ -11,11 +11,12 @@ module.exports = {
 
 
 async customMap(post, currUserId) {
-    // console.log(post._id.toString());
+    console.log(post._id.toString());
     
     try {
-        const allLikes = await Like.find({ type: LIKE_TYPE.POST });
-
+        const allLikes = await Like.find({ type: LIKE_TYPE.POST});
+        // console.log(allLikes);
+        
         const likeCnt = allLikes.reduce((count, like) => {
           if (like.contentId.toString() === post._id.toString()) {
             return count + 1;
@@ -107,7 +108,9 @@ async getAllPosts(page, size, sort) {
   async getPostById(id) {
     const post = await Post.findById(id);
     // console.log(post);
-    const userId = post.author._doc.oid 
+    const userId = post.author?._doc?.oid || post?.author || post.author?._id
+    // console.log(userId);
+    
     const user = await User.findById(userId);    
     post.author = user;
     if (!post) throw new Error("Post not found");
