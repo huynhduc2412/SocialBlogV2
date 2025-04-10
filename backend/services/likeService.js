@@ -39,12 +39,21 @@ const likePost = async (postId, userId) => {
 
 const unlikePost = async (postId, userId) => {
   const like = await Like.findOneAndDelete({ userId, contentId: postId, type: 'POST' });
+//   console.log(like);
   
   if (like) {
-    const post = await Post.findById(postId);
-    post.likes.pull(like._id);
-    await post.save();
-  }
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        {
+          $pull: { likes: like._id }, 
+        },
+        { new: true, runValidators: true } // Trả về bài viết đã cập nhật và kiểm tra validation
+      );
+    
+      if (!updatedPost) {
+        throw new Error('Post not found');
+      }
+    }
 };
 
 const likeComment = async (commentId, userId) => {

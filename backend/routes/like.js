@@ -8,7 +8,7 @@ const  verifyToken  = require('../middleware/verifyToken'); // Middleware để 
 router.post('/post/:id', verifyToken, likePost); //solved
 
 // Unlike a post
-router.delete('/post/:id', unlikePost);
+router.delete('/post/:id',verifyToken , unlikePost); // solved
 
 // Like a comment
 router.post('/comment/:id', likeComment);
