@@ -36,3 +36,4 @@ docker-compose.yml
 
 # Các tệp cấu hình của GitHub Actions (nếu có)
 .github/
+*.env
