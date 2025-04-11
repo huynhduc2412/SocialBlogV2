@@ -169,7 +169,7 @@ const CommentButton = ({ blogId }) => {
       <div className="space-y-2 mt-4">
         {comments.map((comment) => (
           <div
-            key={comment.id}
+            key={comment._id}
             className="text-black p-2 rounded-md flex justify-between items-center border border-gray-200 shadow-sm"
           >
             <div>
@@ -186,12 +186,12 @@ const CommentButton = ({ blogId }) => {
                 <FaHeart />
               </div>
               <button
-                onClick={() => toggleDropdown(comment.id)}
+                onClick={() => toggleDropdown(comment._id)}
                 className="text-black bg-white border-white hover:text-gray-400 focus:outline-none"
               >
                 <FaEllipsisV />
               </button>
-              {activeCommentId === comment.id && (
+              {activeCommentId === comment._id && (
                 <div
                   ref={menuRef}
                   className="bg-white absolute right-0 text-black mt-20 w-40 z-50"
@@ -203,7 +203,7 @@ const CommentButton = ({ blogId }) => {
                     >
                       Delete comment
                     </button>
-                    <ReportButton reportText={comment.content} id={comment.id} type={"Com"} message={"Report comment"} />
+                    <ReportButton reportText={comment.content} id={comment._id} type={"Com"} message={"Report comment"} />
                   </div>
                 </div>
               )}

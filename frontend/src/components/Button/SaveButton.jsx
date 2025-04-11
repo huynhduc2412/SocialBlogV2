@@ -31,7 +31,7 @@ const SaveButton = ({ blog, setBlogs, isSaved, setIsSaved }) => {
         // Ensure the blog's saved status is updated correctly in the list
         setBlogs((prevBlogs) =>
           prevBlogs.map((b) =>
-            b.id === blog.id ? { ...b, isSaved: updatedSaved } : b
+            b.id === blog._id ? { ...b, isSaved: updatedSaved } : b
           )
         );
       } else {

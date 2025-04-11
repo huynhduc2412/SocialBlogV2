@@ -5,7 +5,7 @@ const BlogCard = ({ blog, category, title, imageUrl }) => {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    navigate(`/blog/${blog.id}`); // Điều hướng đến trang blogcontent
+    navigate(`/blog/${blog._id}`); // Điều hướng đến trang blogcontent
   };
 
   return (

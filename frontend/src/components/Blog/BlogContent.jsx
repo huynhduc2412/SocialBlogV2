@@ -99,7 +99,7 @@ const BlogContent = () => {
               <div className="flex justify-between">
                 <BlogAudio blogText={blog.content} />
                 <div className="bg-white text-black p-4 flex hover:bg-red">
-                  <ReportButton reportText={blog.content} id={blog.id} type={"Post"} message={"Report Post"} />
+                  <ReportButton reportText={blog.content} id={blog._id} type={"Post"} message={"Report Post"} />
                 </div>
               </div>
               <hr />
@@ -124,7 +124,7 @@ const BlogContent = () => {
             </div>
           </div>
         </div>
-        <RelatedBlogs tag={blog.tags[0]} postId={blog.id} />
+        <RelatedBlogs tag={blog.tags[0]} postId={blog._id} />
         <CommentButton blogId={id} />
       </div>
     </div >

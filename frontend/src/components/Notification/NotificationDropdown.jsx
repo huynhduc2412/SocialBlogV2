@@ -1,4 +1,4 @@
-import  { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Notification.css"
 
 const NotificationDropdown = () => {
@@ -101,7 +101,7 @@ const NotificationDropdown = () => {
                 <li
                   key={notification.id}
                   className={`notification-item ${!notification.read ? "unread" : ""}`}
-                  onClick={() => markAsRead(notification.id)}
+                  onClick={() => markAsRead(notification._id)}
                 >
                   <img src="https://images.spiderum.com/sp-xs-avatar/c3edf44040da11e88c56e97b1d97fbce.png" alt="Icon" className="notification-icon" />
                   <div>

@@ -36,7 +36,7 @@ const RelatedBlogs = ({ tag, postId }) => {
       <div className="blogs-container flex flex-wrap gap-4">
         {blogs?.map((blog) => (
           <BlogCard
-            key={blog.id}
+            key={blog._id}
             blog={blog}
             category={blog.category}
             title={blog.title}
