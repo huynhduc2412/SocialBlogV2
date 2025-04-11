@@ -50,7 +50,7 @@ const Home = () => {
         const filteredData = data.content.filter((blog) => {
           const blogDate = new Date(blog.createdAt);
           const month = blogDate.getMonth(); // Tháng bắt đầu từ 0 (0 = tháng 1, 1 = tháng 2, ...)
-          return month >= 9 && month <= 11; // Lọc từ tháng 10 (9) đến tháng 12 (11)
+          return month >= 1 && month <= 12; // Lọc từ tháng 10 (9) đến tháng 12 (11)
         });
 
         // Đếm số lượng blog theo ngày trong ba tháng
@@ -72,7 +72,7 @@ const Home = () => {
             .sort((a, b) => {
               const [dayA, monthA] = a.name.split("/").map(Number);
               const [dayB, monthB] = b.name.split("/").map(Number);
-        
+
               if (monthA === monthB) {
                 return dayA - dayB; // Sắp xếp theo ngày
               }
@@ -85,6 +85,9 @@ const Home = () => {
           acc[blog.category] = (acc[blog.category] || 0) + 1;
           return acc;
         }, {});
+
+        console.log("Filtered Data:", filteredData);
+        console.log("Category Count:", categoryCount);
 
         setBlogsByCategory(
           Object.entries(categoryCount).map(([category, count]) => ({
