@@ -77,7 +77,7 @@ const getTopAuthors = async (currentUserId) => {
       {
         // Bóc tách author.$id từ DBRef
         $project: {
-          authorId: '$author.$id',
+          authorId: '$author',
         },
       },
       {
@@ -124,13 +124,18 @@ const getTopAuthors = async (currentUserId) => {
           : false;
 
         return {
-          id: user._id,
-          username: user.username,
           postCount: user.postCount,
-          profilePicture: user.profilePicture,
-          followingNumber: fullUser.following.length,
-          followerNumber: fullUser.followers.length,
-          amIFollowing,
+          id: user._id,
+          userDetails: [
+            {
+              id: user._id,
+              username: user.username,
+              profilePicture: user.profilePicture,
+              followingNumber: fullUser.following.length,
+              followerNumber: fullUser.followers.length,
+              amIFollowing,
+            },
+          ],
         };
       })
     );
