@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 const connectDB = require('./config/db');
 require('dotenv').config();
 
@@ -11,6 +12,7 @@ const loginRouter = require('./routes/login');
 const { appendFile } = require('fs');
 
 var app = express();
+app.use(cors());
 
 connectDB();
 
