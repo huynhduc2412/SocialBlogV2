@@ -5,22 +5,35 @@ const User = require('../models/User');
 const userService = require('./UserService');
 
 const getCommentsByPost = async (postId, userId = null) => {
-  const comments = await Comment.find({ postId });
+  const comments = await Comment.find({ postId })
+    .populate('user', 'name')
+    .lean();
 
-  const result = await Promise.all(
-    comments.map(async (comment) => {
-      const liked = userId
-        ? await Like.exists({ userId, contentId: comment._id, type: 'COMMENT' })
-        : false;
+  console.log(comments);
 
-      return {
-        ...comment.toObject(),
-        liked,
-      };
-    })
-  );
+  try {
+    const result = await Promise.all(
+      comments.map(async (comment) => {
+        const liked = userId
+          ? await Like.exists({
+              userId,
+              contentId: comment._id,
+              type: 'COMMENT',
+            })
+          : false;
 
-  return result;
+        return {
+          ...comment,
+          liked,
+        };
+      })
+    );
+    console.log(result);
+
+    return result;
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+  }
 };
 
 const createComment = async (content, postId, userId) => {
@@ -38,6 +51,7 @@ const createComment = async (content, postId, userId) => {
   if (!post) throw new Error('Post not found');
   post.comments.push(savedComment._id);
   await post.save();
+  savedComment.user = await User.findById(userId).select('_id name');
 
   return savedComment;
 };

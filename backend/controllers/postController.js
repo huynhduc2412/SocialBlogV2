@@ -115,7 +115,7 @@ const getRelatedPosts = async (req, res) => {
   try {
     const { tag, postId } = req.params;
     const result = await postService.getRelatedPosts(tag, postId);
-    res.json(result);
+    res.json({ content: result });
   } catch (err) {
     res
       .status(500)
