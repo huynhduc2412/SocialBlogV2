@@ -81,13 +81,13 @@ const ReportItemList = () => {
                   <FontAwesomeIcon icon={faEye} />
                 </Link>
                 <button
-                  onClick={() => handleDelete(item.id, item.type, item.contentId)}
+                  onClick={() => handleDelete(item._id, item.type, item.contentId)}
                   className="bg-white border-white text-red-500 hover:text-red-700 mx-1"
                 >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
                 <button
-                  onClick={() => handleIgnore(item.id)}
+                  onClick={() => handleIgnore(item._id)}
                   className="bg-white border-white text-blue-500 hover:text-blue-700 mx-1"
                 >
                   <FontAwesomeIcon icon={faMinus} />

@@ -1,4 +1,4 @@
-const commentService = require("../services/commentService");
+const commentService = require('../services/commentService');
 
 // Get comments for a specific post
 const getCommentsByPost = async (req, res) => {
@@ -9,7 +9,7 @@ const getCommentsByPost = async (req, res) => {
     const comments = await commentService.getCommentsByPost(postId, userId);
     res.json(comments);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch comments" });
+    res.status(500).json({ message: 'Failed to fetch comments' });
   }
 };
 
@@ -20,7 +20,7 @@ const createComment = async (req, res) => {
     const userId = req.user.userId;
     const { content } = req.body;
 
-    console.log(postId + " " + userId + " " + content);
+    console.log(postId + ' ' + userId + ' ' + content);
 
     const newComment = await commentService.createComment(
       content,
@@ -29,7 +29,7 @@ const createComment = async (req, res) => {
     );
     res.status(201).json(newComment);
   } catch (err) {
-    res.status(400).json({ message: "Failed to create comment" + err });
+    res.status(400).json({ message: 'Failed to create comment' + err });
   }
 };
 
@@ -40,7 +40,7 @@ const deleteComment = async (req, res) => {
     await commentService.deleteCommentR(commentId);
     res.sendStatus(204);
   } catch (err) {
-    res.status(404).json({ message: "Comment not found or delete failed" });
+    res.status(404).json({ message: 'Comment not found or delete failed' });
   }
 };
 

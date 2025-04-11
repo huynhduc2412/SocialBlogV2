@@ -47,11 +47,15 @@ const handleToxicContent = async ({ type, id, toxicityPercent, user }) => {
       await sendUserDeleteNotice(userId, 'Comment');
     }
   } else {
+    if (!user || !user.userId) {
+      throw new Error('User information is required to create a report item');
+    }
+
     await reportItemModel.create({
       contentId: id,
       type,
       percentToxic: toxicityPercent,
-      userReportId: user?.userId || null,
+      userReportId: user.userId,
     });
   }
 };

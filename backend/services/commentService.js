@@ -76,9 +76,7 @@ const deleteComment = async (commentId) => {
 const deleteCommentR = async (commentId) => {
   const comment = await Comment.findById(commentId);
   if (!comment) throw new Error('Comment not found');
-
   const userId = comment.user.toString();
-
   const post = await Post.findById(comment.postId);
   if (post) {
     post.comments = post.comments.filter((cId) => cId.toString() !== commentId);
@@ -92,7 +90,7 @@ const deleteCommentR = async (commentId) => {
 
 const getPostByCommentId = async (commentId) => {
   const comment = await Comment.findById(commentId);
-  return comment?.postId || null;
+  return comment.postId;
 };
 
 module.exports = {
