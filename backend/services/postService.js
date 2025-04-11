@@ -276,4 +276,18 @@ module.exports = {
       filtered.map((p) => this.customMap(p, p.author.toString()))
     );
   },
+
+  async getPostByCommentId(commentId) {
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      throw new Error('Comment not found');
+    }
+
+    const post = await Post.findById(comment.postId);
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    return post._id; // Return the post ID
+  },
 };

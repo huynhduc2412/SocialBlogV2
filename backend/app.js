@@ -22,6 +22,7 @@ var bookmarkRouter = require('./routes/bookmark');
 var audioRouter = require('./routes/audio');
 var perspectiveRouter = require('./routes/perspective');
 var adminRouter = require('./controllers/adminController');
+var reportItemRouter = require('./routes/reportItem');
 
 var app = express();
 app.use(cors());
@@ -53,6 +54,7 @@ app.use('/bookmarks', bookmarkRouter);
 app.use('/api/audio', audioRouter);
 app.use('/api/perspective', perspectiveRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/report-items', reportItemRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
