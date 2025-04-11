@@ -8,6 +8,7 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
+const { appendFile } = require('fs');
 
 var app = express();
 
@@ -31,6 +32,9 @@ app.use('/api/users', require('./routes/user'));
 app.use('/cloudinary', require('./routes/upload'));
 app.use('/api/posts', require('./routes/post'));
 app.use('/api/comments', require('./routes/comment'));
+app.use('/api/notifications', require('./routes/notification'));
+app.use('/api/likes', require('./routes/like'));
+app.use('/api/follows', require('./routes/follow'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
