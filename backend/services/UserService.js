@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Post = require('../models/Post');
-const Follow = require('../models/Follow')
+const Follow = require('../models/Follow');
 const sendVerificationEmail = require('../utils/sendVerificationEmail');
 
 exports.register = async ({ name, email, username, password }) => {
@@ -10,7 +10,9 @@ exports.register = async ({ name, email, username, password }) => {
   if (existing) throw new Error('Email hoặc Username đã tồn tại');
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const verificationCode = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '1d' });
+  const verificationCode = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
+    expiresIn: '1d',
+  });
 
   const newUser = new User({
     name,
@@ -18,7 +20,7 @@ exports.register = async ({ name, email, username, password }) => {
     username,
     password: hashedPassword,
     verificationCode,
-    enabled: false
+    enabled: false,
   });
 
   await newUser.save();
@@ -43,72 +45,84 @@ const findByUsername = async (username) => {
   return await User.findOne({ username });
 };
 
-const findByIdR = async (id , currentUserId) => {
-  const user =  await User.findById(id).select('-password'); // Loại bỏ password
+const findByIdR = async (id, currentUserId) => {
+  const user = await User.findById(id).select('-password'); // Loại bỏ password
   if (!user) {
     throw new Error('User not found');
   }
-  const currentUser = await User.findById(currentUserId).populate("following");
+  const currentUser = await User.findById(currentUserId).populate('following');
   const amIFollowing = currentUser
-          ? currentUser.following.some(f => f.following.toString() === user._id.toString())
-          : false;
+    ? currentUser.following.some(
+        (f) => f.following.toString() === user._id.toString()
+      )
+    : false;
   return {
     ...user.toObject(),
-    amIFollowing
-  }
+    amIFollowing,
+  };
 };
 
-const updateUser = async (id , userRequest) => {
+const updateUser = async (id, userRequest) => {
   const { name, email, profilePicture } = userRequest;
-  return await User.findByIdAndUpdate(id, { name, email, profilePicture }, { new: true });
+  return await User.findByIdAndUpdate(
+    id,
+    { name, email, profilePicture },
+    { new: true }
+  );
 };
 
 const getTopAuthors = async (currentUserId) => {
-    try {
-      
-      const result = await Post.aggregate([
-        {
-          // Bóc tách author.$id từ DBRef
-          $project: {
-            authorId: "$author.$id"
-          }
+  try {
+    const result = await Post.aggregate([
+      {
+        // Bóc tách author.$id từ DBRef
+        $project: {
+          authorId: '$author.$id',
         },
-        {
-          $group: {
-            _id: "$authorId",
-            postCount: { $sum: 1 }
-          }
+      },
+      {
+        $group: {
+          _id: '$authorId',
+          postCount: { $sum: 1 },
         },
-        { $sort: { postCount: -1 } },
-        { $limit: 5 },
-        {
-          $lookup: {
-            from: "users",
-            localField: "_id",
-            foreignField: "_id",
-            as: "user"
-          }
+      },
+      { $sort: { postCount: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'user',
         },
-        { $unwind: "$user" },
-        {
-          $project: {
-            _id: "$user._id",
-            username: "$user.username",
-            postCount: 1,
-            profilePicture: "$user.profilePicture"
-          }
-        }
-      ]);
-    
-      const currentUser = await User.findById(currentUserId).populate("following");
-    
-      return await Promise.all(result.map(async (user) => {
-        const fullUser = await User.findById(user._id).populate("followers").populate("following");
-    
+      },
+      { $unwind: '$user' },
+      {
+        $project: {
+          _id: '$user._id',
+          username: '$user.username',
+          postCount: 1,
+          profilePicture: '$user.profilePicture',
+        },
+      },
+    ]);
+
+    const currentUser = await User.findById(currentUserId).populate(
+      'following'
+    );
+
+    return await Promise.all(
+      result.map(async (user) => {
+        const fullUser = await User.findById(user._id)
+          .populate('followers')
+          .populate('following');
+
         const amIFollowing = currentUser
-          ? currentUser.following.some(f => f.following.toString() === user._id.toString())
+          ? currentUser.following.some(
+              (f) => f.following.toString() === user._id.toString()
+            )
           : false;
-    
+
         return {
           id: user._id,
           username: user.username,
@@ -116,17 +130,18 @@ const getTopAuthors = async (currentUserId) => {
           profilePicture: user.profilePicture,
           followingNumber: fullUser.following.length,
           followerNumber: fullUser.followers.length,
-          amIFollowing
+          amIFollowing,
         };
-      }));
-    } catch (error) {
-      console.log(error);
-    }
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
   findByUsername,
   findByIdR,
   updateUser,
-  getTopAuthors
+  getTopAuthors,
 };
