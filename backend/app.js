@@ -8,8 +8,19 @@ const connectDB = require('./config/db');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
-const loginRouter = require('./routes/login');
-const { appendFile } = require('fs');
+var loginRouter = require('./routes/login');
+var registerRouter = require('./routes/register');
+var verifyRouter = require('./routes/verify');
+var userRouter = require('./routes/user');
+var uploadRouter = require('./routes/upload');
+var postRouter = require('./routes/post');
+var commentRouter = require('./routes/comment');
+var notificationRouter = require('./routes/notification');
+var likeRouter = require('./routes/like');
+var followRouter = require('./routes/follow');
+var bookmarkRouter = require('./routes/bookmark');
+var audioRouter = require('./routes/audio');
+var perspectiveRouter = require('./routes/perspective');
 
 var app = express();
 app.use(cors());
@@ -28,18 +39,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
-app.use('/register', require('./routes/register'));
-app.use('/verify', require('./routes/verify'));
-app.use('/api/users', require('./routes/user'));
-app.use('/cloudinary', require('./routes/upload'));
-app.use('/api/posts', require('./routes/post'));
-app.use('/api/comments', require('./routes/comment'));
-app.use('/api/notifications', require('./routes/notification'));
-app.use('/api/likes', require('./routes/like'));
-app.use('/api/follows', require('./routes/follow'));
-app.use('/bookmarks', require('./routes/bookmark'));
-app.use('/api/audio', require('./routes/audio'));
-app.use('/api/perspective', require('./routes/perspective'));
+app.use('/register', registerRouter);
+app.use('/verify', verifyRouter);
+app.use('/api/users', userRouter);
+app.use('/cloudinary', uploadRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/notifications', notificationRouter);
+app.use('/api/likes', likeRouter);
+app.use('/api/follows', followRouter);
+app.use('/bookmarks', bookmarkRouter);
+app.use('/api/audio', audioRouter);
+app.use('/api/perspective', perspectiveRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
