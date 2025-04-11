@@ -36,6 +36,7 @@ app.use('/api/notifications', require('./routes/notification'));
 app.use('/api/likes', require('./routes/like'));
 app.use('/api/follows', require('./routes/follow'));
 app.use('/api/bookmarks', require('./routes/bookmark'));
+app.use('/api/audio', require('./routes/audio'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
