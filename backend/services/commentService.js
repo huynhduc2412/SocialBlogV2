@@ -1,8 +1,8 @@
-const Comment = require("../models/Comment");
-const Post = require("../models/Post");
-const Like = require("../models/Like");
-const User = require("../models/User");
-const userService = require("./userService");
+const Comment = require('../models/Comment');
+const Post = require('../models/Post');
+const Like = require('../models/Like');
+const User = require('../models/User');
+const userService = require('./UserService');
 
 const getCommentsByPost = async (postId, userId = null) => {
   const comments = await Comment.find({ postId });
@@ -10,7 +10,7 @@ const getCommentsByPost = async (postId, userId = null) => {
   const result = await Promise.all(
     comments.map(async (comment) => {
       const liked = userId
-        ? await Like.exists({ userId, contentId: comment._id, type: "COMMENT" })
+        ? await Like.exists({ userId, contentId: comment._id, type: 'COMMENT' })
         : false;
 
       return {
@@ -35,10 +35,8 @@ const createComment = async (content, postId, userId) => {
   const savedComment = await newComment.save();
 
   const post = await Post.findById(postId);
-  if (!post) throw new Error("Post not found");
-  post.comments.push(savedComment);
-  console.log(post);
-
+  if (!post) throw new Error('Post not found');
+  post.comments.push(savedComment._id);
   await post.save();
 
   return savedComment;
@@ -50,7 +48,7 @@ const updateComment = async (commentId, content) => {
 
 const deleteComment = async (commentId) => {
   const comment = await Comment.findById(commentId);
-  if (!comment) throw new Error("Comment not found");
+  if (!comment) throw new Error('Comment not found');
 
   const post = await Post.findById(comment.postId);
   if (post) {
@@ -63,7 +61,7 @@ const deleteComment = async (commentId) => {
 
 const deleteCommentR = async (commentId) => {
   const comment = await Comment.findById(commentId);
-  if (!comment) throw new Error("Comment not found");
+  if (!comment) throw new Error('Comment not found');
 
   const userId = comment.user.toString();
 
