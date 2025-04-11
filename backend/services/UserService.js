@@ -144,9 +144,22 @@ const getTopAuthors = async (currentUserId) => {
   }
 };
 
+const getUsers = async () => {
+  try {
+    const users = await User.find().select(
+      '_id name email username profilePicture'
+    );
+    return users;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw new Error('Unable to fetch users');
+  }
+};
+
 module.exports = {
   findByUsername,
   findByIdR,
   updateUser,
   getTopAuthors,
+  getUsers,
 };
