@@ -3,31 +3,29 @@ const User = require('../models/User');
 const mongoose = require('mongoose');
 
 module.exports = {
-
   // Follow a user
   async followUser(currentUserId, targetUserId) {
     try {
-      // Kiểm tra nếu người dùng muốn follow chính họ
       if (currentUserId === targetUserId) {
         throw new Error("You can't follow yourself");
       }
 
-      // Kiểm tra nếu mối quan hệ follow đã tồn tại
-      const existingFollow = await Follow.findOne({ follower: currentUserId, following: targetUserId });
+      const existingFollow = await Follow.findOne({
+        follower: currentUserId,
+        following: targetUserId,
+      });
       if (existingFollow) {
-        throw new Error("You are already following this user");
+        throw new Error('You are already following this user');
       }
 
-      // Tạo mới mối quan hệ follow
       const follow = new Follow({
         follower: currentUserId,
         following: targetUserId,
-        followedAt: Date.now()
+        followedAt: Date.now(),
       });
 
       await follow.save();
 
-      // Cập nhật danh sách following và followers cho 2 người dùng
       await User.updateOne(
         { _id: currentUserId },
         { $push: { following: follow._id } }
@@ -47,13 +45,14 @@ module.exports = {
   // Unfollow a user
   async unfollowUser(currentUserId, targetUserId) {
     try {
-      // Kiểm tra mối quan hệ follow tồn tại hay không
-      const follow = await Follow.findOneAndDelete({ follower: currentUserId, following: targetUserId });
+      const follow = await Follow.findOneAndDelete({
+        follower: currentUserId,
+        following: targetUserId,
+      });
       if (!follow) {
-        throw new Error("Follow relationship does not exist");
+        throw new Error('Follow relationship does not exist');
       }
 
-      // Cập nhật lại danh sách following và followers
       await User.updateOne(
         { _id: currentUserId },
         { $pull: { following: follow._id } }
@@ -70,21 +69,39 @@ module.exports = {
     }
   },
 
-  // Get followers of a user
+  // Get followers
   async getFollowers(userId) {
     try {
       const user = await User.findById(userId).populate('followers');
-      return user.followers;
+      var users = [];
+
+      for (let follower of user.followers) {
+        let userDetails = await User.findById(
+          follower.follower.toString()
+        ).select('_id name profilePicture');
+        users.push(userDetails);
+      }
+      console.log(users);
+      return users;
     } catch (err) {
       throw err;
     }
   },
 
-  // Get following of a user
+  // Get following
   async getFollowing(userId) {
     try {
       const user = await User.findById(userId).populate('following');
-      return user.following;
+      var users = [];
+
+      for (const fol of user.following) {
+        const userDetails = await User.findById(
+          fol.following.toString()
+        ).select('_id name profilePicture');
+        users.push(userDetails);
+      }
+      console.log(users);
+      return users;
     } catch (err) {
       throw err;
     }
@@ -108,5 +125,5 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-  }
+  },
 };

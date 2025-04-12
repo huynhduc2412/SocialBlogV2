@@ -86,12 +86,13 @@ module.exports = {
     }
 
     for (const follower of followers) {
-      console.log(follower._id);
+      let follwerId = await Follow.findById(follower._id);
+      console.log(await Follow.findById(follower._id));
       await NotificationService.createNewPostNotification(
-        (userId = Follow.findById(follower._id).user),
+        (userId = follwerId.follower),
         postId,
-        '🆕 Bài viết mới',
-        `📢 ${currUsername} vừa đăng một bài viết mới!`
+        'New post',
+        `from ${currUsername}!`
       );
     }
   },

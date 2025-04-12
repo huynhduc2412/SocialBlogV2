@@ -5,7 +5,7 @@ const Post = require('../models/Post');
 const Follow = require('../models/Follow');
 const sendVerificationEmail = require('../utils/sendVerificationEmail');
 
-exports.register = async ({ name, email, username, password }) => {
+const register = async ({ name, email, username, password }) => {
   const existing = await User.findOne({ $or: [{ email }, { username }] });
   if (existing) throw new Error('Email hoặc Username đã tồn tại');
 
@@ -30,7 +30,7 @@ exports.register = async ({ name, email, username, password }) => {
   return newUser;
 };
 
-exports.verifyEmail = async (code) => {
+const verifyEmail = async (code) => {
   const decoded = jwt.verify(code, process.env.JWT_SECRET_KEY);
   const user = await User.findOne({ email: decoded.email });
 
@@ -43,6 +43,14 @@ exports.verifyEmail = async (code) => {
 
 const findByUsername = async (username) => {
   return await User.findOne({ username });
+};
+
+const findById = async (id) => {
+  const user = await User.findById(id).select('-password'); // Loại bỏ password
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user.toObject();
 };
 
 const findByIdR = async (id, currentUserId) => {
@@ -162,4 +170,7 @@ module.exports = {
   updateUser,
   getTopAuthors,
   getUsers,
+  findById,
+  register,
+  verifyEmail,
 };
