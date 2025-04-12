@@ -301,9 +301,9 @@ const Modal = ({ title, onClose, items }) => {
         <ul>
           {items.map((item) => (
             <li
-              key={item.id}
+              key={item._id}
               className="mb-2 flex items-center space-x-2 cursor-pointer"
-              onClick={() => handleProfileClick(item.id)}
+              onClick={() => handleProfileClick(item._id)}
             >
               <div className="w-8 h-8 bg-gray-300 rounded-full overflow-hidden cursor-pointer">
                 {item.profilePicture ? (
